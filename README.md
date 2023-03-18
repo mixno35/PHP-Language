@@ -48,7 +48,7 @@
     include_once $_SERVER['DOCUMENT_ROOT'] . '/assets/prefs/lang.php';
 ?>
 <!DOCTYPE html>
-<html lang="<? echo strval($languageTAG ?? "en-US"); ?>">
+<html lang="<? echo strval($languageTAG ?? 'en-US'); ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
