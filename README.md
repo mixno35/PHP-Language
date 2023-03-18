@@ -34,7 +34,7 @@
     $string = array_merge($string_default, $string_setting);
 
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = $string['language_tag'];
+    $languageTAG = $string['language_tag']; // Для аттрибута lang=""
 
     /* HINT^ - Возвращаем JSON */
     $content = json_encode($string);
@@ -55,10 +55,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title><? echo $string['web_name']; ?></title>
+    <!-- PHP-Language -->
 
-    <script src="/assets/js/jquery/jquery-3.5.0.js"></script>
-    <script src="/assets/js/jquery/jquery.min.js"></script>
-    <script src="/assets/js/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript">
         var stringOBJ = JSON.parse(<? echo json_encode($content ?? '{}'); ?>);
     </script>
