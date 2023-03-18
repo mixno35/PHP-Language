@@ -37,7 +37,7 @@
     $languageTAG = $string['language_tag']; // Для атрибута lang=""
 
     /* HINT^ - Возвращаем JSON */
-    $content = json_encode($string);
+    $content = json_encode($string); // Для JS списка
 ?>
 ```
 
