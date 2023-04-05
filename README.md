@@ -63,7 +63,11 @@
     </script>
 </head>
 <body>
+    <h1 id="hello_world"></h1>
     
+    <script>
+        document.querySelector("#hello_world").innerText = stringOBJ['project_name'];
+    </script>
 </body>
 </html>
 ```
