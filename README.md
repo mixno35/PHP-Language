@@ -1,6 +1,7 @@
 # PHP-Language
 
 ### Настройка для работы с несколькими языками без потери ключей.
+Все языковые пакеты должны быть по пути - (корень)/assets/lang/(название).json
 
 ```php
 <?php
@@ -21,7 +22,7 @@
 
     /* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
     $content_setting = $content_default;
-    $content_user_lang = trim(str_replace('/', '', strval(substr($_COOKIE['lang'], 0, 2))));
+    $content_user_lang = trim(str_replace('/', '', strval(substr(strval($_COOKIE['lang'] ?? 'en'), 0, 2))));
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/assets/lang/' . $content_user_lang . '.json')) {
         $content_setting = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/assets/lang/' . $content_user_lang . '.json', false);
     }
