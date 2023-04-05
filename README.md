@@ -34,7 +34,7 @@
     $string = array_merge($string_default, $string_setting);
 
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = $string['language_tag']; // Для атрибута lang=""
+    $languageTAG = strval($string['language_tag'] ?? 'en-US'); // Для атрибута lang=""
 
     /* HINT^ - Возвращаем JSON */
     $content = json_encode($string); // Для JS списка
