@@ -66,3 +66,19 @@
 </body>
 </html>
 ```
+
+### Примем языкового пакета en.json
+```json
+{
+    "language_tag":"en-US",
+    "project_name":"PHP-Language"
+}
+```
+
+### Примем языкового пакета ru.json
+```json
+{
+    "project_name":"PHP-Языковой пакет"
+}
+```
+В русском примере отсутвует ключ "language_tag", он будет взят из языкового пакета по умолчания en.json
