@@ -11,11 +11,11 @@
 
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageID = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $languageID = strval(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?? 'en');
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5);
+    $languageTAG = strval(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5) ?? 'en-US');
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
     $content_default = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/assets/lang/en.json', false);
