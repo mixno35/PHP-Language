@@ -13,13 +13,13 @@
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
     $languageID = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?? "en");
-    
-    /* HINT^ - Место, где лежать все языки */
-    $path_main_langs = "/assets/lang";
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
     $languageTAG = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US");
+    
+    /* HINT^ - Место, где лежать все языки */
+    $path_main_langs = "/assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
     $content_default = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/en.json", false);
