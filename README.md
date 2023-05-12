@@ -2,7 +2,7 @@
 
 ### Настройка для работы с несколькими языками без потери ключей.
 #### Этот пример позволяет вам использовать несколько языков без потери ключей, при отсутствии одного или нескольких ключей они будут взяты из языкового пакета по умолчанию.
-#### Все языковые пакеты должны быть по пути - (корень)/assets/lang/(название).json
+#### Все языковые пакеты должны быть по пути - (корень)/assets/lang/(название).json (путь можно изменить в переменной "$path_main_langs").
 
 ```php
 <?php
@@ -13,19 +13,22 @@
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
     $languageID = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?? "en");
+    
+    /* HINT^ - Место, где лежать все языки */
+    $path_main_langs = "/assets/lang";
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
     $languageTAG = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US");
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
-    $content_default = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/assets/lang/en.json", false);
+    $content_default = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/en.json", false);
 
     /* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
     $content_setting = $content_default;
     $content_user_lang = trim(str_replace("/", "", strval(substr(strval($_COOKIE["lang"] ?? "en"), 0, 2))));
-    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/assets/lang/$content_user_lang" . ".json")) {
-        $content_setting = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/assets/lang/$content_user_lang" . ".json", false);
+    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/$content_user_lang" . ".json")) {
+        $content_setting = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/$content_user_lang" . ".json", false);
     }
 
     /* HINT^ - Преобразование языкового пакета в список */
