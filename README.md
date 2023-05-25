@@ -12,23 +12,24 @@
 
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageID = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?? "en");
+    $languageID = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?? "en";
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = strval(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US");
-    
+    $languageTAG = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US";
+
     /* HINT^ - Место, где лежать все языки */
-    $path_main_langs = "/assets/lang";
+    $path_document_root = "";
+    $path_main_lang = "assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
-    $content_default = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/en.json", false);
+    $content_default = file_get_contents($path_document_root . "$path_main_lang/en.json");
 
     /* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
     $content_setting = $content_default;
-    $content_user_lang = trim(str_replace("/", "", strval(substr(strval($_COOKIE["lang"] ?? "en"), 0, 2))));
-    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/$content_user_lang" . ".json")) {
-        $content_setting = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "$path_main_langs/$content_user_lang" . ".json", false);
+    $content_user_lang = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? "en"), 0, 2)));
+    if (file_exists($path_document_root . "$path_main_lang/$content_user_lang" . ".json")) {
+        $content_setting = file_get_contents($path_document_root . "$path_main_lang/$content_user_lang" . ".json");
     }
 
     /* HINT^ - Преобразование языкового пакета в список */
@@ -49,28 +50,31 @@
 
 ```php
 <?php
+    $languageTAG = "en-US";
+    $string = array();
+
     /* HINT^ - Загрузка стандартных настроек */
     include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
 ?>
 <!DOCTYPE html>
-<html lang="<? echo strval($languageTAG ?? "en-US"); ?>">
+<html lang="<?php echo $languageTAG ?? "en-US"; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><? echo $string["project_name"]; ?></title>
-    <!-- PHP-Language -->
+    <title><?php echo $string["project_name"]; ?></title>
+    <!-- Результат: PHP-Language/PHP-Языковой пакет -->
 
     <script type="text/javascript">
-        var stringOBJ = JSON.parse(<? echo json_encode($content ?? "{}"); ?>);
+        var stringOBJ = JSON.parse(<?php echo json_encode($content ?? "{}"); ?>);
     </script>
 </head>
 <body>
     <h1 id="hello_world"></h1>
     
     <script>
-        document.querySelector("#hello_world").innerText = stringOBJ["project_name"];
+        document.querySelector("#hello_world").innerText = stringOBJ["project_name"]; // Результат: PHP-Language/PHP-Языковой пакет
     </script>
 </body>
 </html>
