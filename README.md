@@ -19,7 +19,7 @@
     $languageTAG = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US";
 
     /* HINT^ - Место, где лежать все языки */
-    $path_document_root = "";
+    $path_document_root = $_SERVER["DOCUMENT_ROOT"];
     $path_main_lang = "assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
