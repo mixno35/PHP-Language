@@ -12,11 +12,11 @@
 
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageID = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?? "en";
+    $languageID = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? "en"), 0, 2);
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 5) ?? "en-US";
+    $languageTAG = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? "en-US"), 0, 5);
 
     /* HINT^ - Место, где лежать все языки */
     $path_document_root = $_SERVER["DOCUMENT_ROOT"];
