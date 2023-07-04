@@ -20,7 +20,7 @@
 
     /* HINT^ - Место, где лежать все языки */
     $path_document_root = $_SERVER["DOCUMENT_ROOT"];
-    $path_main_lang = "assets/lang";
+    $path_main_lang = "/assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
     $content_default = file_get_contents($path_document_root . "$path_main_lang/en.json");
