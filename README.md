@@ -50,8 +50,7 @@
 
 ```php
 <?php
-    $languageTAG = "en-US";
-    $string = array();
+    global $languageTAG, $string;
 
     /* HINT^ - Загрузка стандартных настроек */
     include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
