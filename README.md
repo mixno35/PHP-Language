@@ -40,7 +40,7 @@
     $string = array_merge($string_default, $string_setting);
 
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = strval($string["language_tag"] ?? "en-US"); // Для атрибута lang=""
+    $language_tag = strval($string["language_tag"] ?? ($languageTAG ?? "en-US")); // Для атрибута lang=""
 
     /* HINT^ - Возвращаем JSON */
     $content = json_encode($string); // Для JS списка
@@ -62,13 +62,13 @@
 
 ```php
 <?php
-    global $languageTAG, $string;
+    global $language_tag, $string;
 
     /* HINT^ - Загрузка стандартных настроек */
     include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
 ?>
 <!DOCTYPE html>
-<html lang="<?= $languageTAG ?? "en-US" ?>">
+<html lang="<?= $language_tag ?? "en-US" ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
