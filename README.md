@@ -20,16 +20,16 @@
 
     /* HINT^ - Место, где лежать все языки */
     $path_document_root = $_SERVER["DOCUMENT_ROOT"];
-    $path_main_lang = "/assets/lang";
+    $path_main_lang = "$path_document_root/assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
-    $content_default = file_get_contents($path_document_root . "$path_main_lang/en.json");
+    $content_default = file_get_contents("$path_main_lang/en.json");
 
     /* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
     $content_setting = $content_default;
     $content_user_lang = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? "en"), 0, 2)));
-    if (file_exists($path_document_root . "$path_main_lang/$content_user_lang" . ".json")) {
-        $content_setting = file_get_contents($path_document_root . "$path_main_lang/$content_user_lang" . ".json");
+    if (file_exists("$path_main_lang/$content_user_lang" . ".json")) {
+        $content_setting = file_get_contents("$path_main_lang/$content_user_lang" . ".json");
     }
 
     /* HINT^ - Преобразование языкового пакета в список */
