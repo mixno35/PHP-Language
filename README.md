@@ -44,6 +44,18 @@
 
     /* HINT^ - Возвращаем JSON */
     $content = json_encode($string); // Для JS списка
+
+    /**
+     * Функция выводит необходимый текст по его ключу, если текста под этим ключом нет, будет выведен этот ключ
+     * @param string $name
+     * @param bool $html (не обязательно) обрабатывает html теги
+     * @return string
+     */
+    function str_get_string(string $name = "", bool $html = false):string {
+        global $string;
+        $str = array_key_exists($name, $string) ? $string[$name] : $name;
+        return $html ? $str : htmlspecialchars($str);
+    }
 ?>
 ```
 
@@ -56,17 +68,19 @@
     include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $languageTAG ?? "en-US"; ?>">
+<html lang="<?= $languageTAG ?? "en-US" ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?php echo $string["project_name"]; ?></title>
+    <title><?= str_get_string("project_name") ?></title>
+    <!-- ИЛИ (рекомендуется пример выше) -->
+    <title><?= $string["project_name"] ?></title>
     <!-- Результат: PHP-Language/PHP-Языковой пакет -->
 
     <script type="text/javascript">
-        var stringOBJ = JSON.parse(<?php echo json_encode($content ?? "{}"); ?>);
+        const stringOBJ = JSON.parse(JSON.stringify(<?= $content ?>));
     </script>
 </head>
 <body>
