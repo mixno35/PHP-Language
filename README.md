@@ -86,7 +86,7 @@
     <!-- Результат: PHP-Language/PHP-Языковой пакет -->
 
     <script type="text/javascript">
-        const stringOBJ = JSON.parse(JSON.stringify(<?= $content ?>));
+        const stringOBJ = <?= $content ?>;
     </script>
 </head>
 <body>
