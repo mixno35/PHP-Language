@@ -62,7 +62,6 @@
     
         return $html ? $str : htmlspecialchars($str);
     }
-?>
 ```
 
 
@@ -70,7 +69,7 @@
 <?php
     global $language_tag, $string;
 
-    /* HINT^ - Загрузка стандартных настроек */
+    /* HINT^ - Подключаем файл с настройками языка */
     include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
 ?>
 <!DOCTYPE html>
