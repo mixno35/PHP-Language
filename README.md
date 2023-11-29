@@ -10,24 +10,26 @@
     /* HINT^ - Языковые настройки */
     /* HINT^ - Языковые настройки */
 
+    $default_lang = "en";
+    $default_lang_tag = "en-US";
+
     /* HINT^ - Короткое языковое значение (ru, by, en...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageID = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? "en"), 0, 2);
+    $languageID = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? $default_lang), 0, 2);
 
     /* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
     /* HINT^ - Изменять при изменении языка пользователем */
-    $languageTAG = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? "en-US"), 0, 5);
+    $languageTAG = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? $default_lang_tag), 0, 5);
 
     /* HINT^ - Место, где лежать все языки */
-    $path_document_root = $_SERVER["DOCUMENT_ROOT"];
-    $path_main_lang = "$path_document_root/assets/lang";
+    $path_main_lang = $_SERVER["DOCUMENT_ROOT"] . "/assets/lang";
 
     /* HINT^ - Загрузка стандартного языкового пакета в JSON */
-    $content_default = file_get_contents("$path_main_lang/en.json");
+    $content_default = file_get_contents("$path_main_lang/$default_lang.json");
 
     /* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
     $content_setting = $content_default;
-    $content_user_lang = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? "en"), 0, 2)));
+    $content_user_lang = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? $default_lang), 0, 2)));
     if (file_exists("$path_main_lang/$content_user_lang.json")) {
         $content_setting = file_get_contents("$path_main_lang/$content_user_lang.json");
     }
@@ -40,20 +42,24 @@
     $string = array_merge($string_default, $string_setting);
 
     /* HINT^ - Изменять при изменении языка пользователем */
-    $language_tag = strval($string["language_tag"] ?? ($languageTAG ?? "en-US")); // Для атрибута lang=""
+    $language_tag = strval($string["language_tag"] ?? ($languageTAG ?? $default_lang_tag)); // Для атрибута lang=""
 
     /* HINT^ - Возвращаем JSON */
     $content = json_encode($string); // Для JS списка
 
     /**
      * Функция выводит необходимый текст по его ключу, если текста под этим ключом нет, будет выведен этот ключ
-     * @param string $name
-     * @param bool $html (не обязательно) обрабатывает html теги
+     * @param string $key
+     * @param bool $html (необязательно) обрабатывает html теги
+     * @param array $replace заменяет %1s, %2s, %3s и т.д. на ваш текст
      * @return string
      */
-    function str_get_string(string $name = "", bool $html = false):string {
+    function str_get_string(string $key = "", bool $html = false, array $replace = []):string {
         global $string;
-        $str = array_key_exists($name, $string) ? $string[$name] : $name;
+        $str = array_key_exists($key, $string) ? $string[$key] : $key;
+        if (sizeof($replace) > 0)
+            for($i = 0; $i < sizeof($replace); $i++) $str = str_replace("%" . ($i + 1) . "s", $replace[$i], $str);
+    
         return $html ? $str : htmlspecialchars($str);
     }
 ?>
@@ -87,7 +93,7 @@
     <h1 id="hello_world"></h1>
     
     <script>
-        document.querySelector("#hello_world").innerText = stringOBJ["project_name"]; // Результат: PHP-Language/PHP-Языковой пакет
+        document.querySelector("#hello_world").innerText = str_get_string("project_name"); // Результат: PHP-Language/PHP-Языковой пакет
     </script>
 </body>
 </html>
