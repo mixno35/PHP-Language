@@ -23,6 +23,7 @@ $languageTAG = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? $default_lang_tag), 0
 
 /* HINT^ - Место, где лежать все языки */
 $path_main_lang = $_SERVER["DOCUMENT_ROOT"] . "/assets/lang";
+// $path_main_lang = dirname(__FILE__);
 
 /* HINT^ - Загрузка стандартного языкового пакета в JSON */
 $content_default = file_get_contents("$path_main_lang/$default_lang.json");
