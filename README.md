@@ -10,58 +10,57 @@
 /* HINT^ - Языковые настройки */
 /* HINT^ - Языковые настройки */
 /* HINT^ - Языковые настройки */
-$default_lang = "en";
-$default_lang_tag = "en-US";
+const lang_default_code = "en"; // Язык по умолчанию
+const lang_default_tag = "en-US"; // Тег по умолчанию
 
-/* HINT^ - Короткое языковое значение (ru, by, en...) */
-/* HINT^ - Изменять при изменении языка пользователем */
-$languageID = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? $default_lang), 0, 2);
+$lang_get = trim($_GET["lang"] ?? "");
+$lang_id = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? lang_default_code), 0, 2); // Язык устройства пользователя
+$lang_tag = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? lang_default_tag), 0, 5); // Тег устройства пользователя
+$lang_setting = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? $lang_id), 0, 2))); // Язык исходя из настроек cookie "lang"
+$lang_setting = strlen($lang_get) >= 2 ? substr($lang_get, 0, 2) : $lang_setting; // Если есть атрибут "lang" в GET запросе, игнорируем параметр в cookies 
 
-/* HINT^ - Стандартное языковое значение (ru-RU, be-BY, en-US...) */
-/* HINT^ - Изменять при изменении языка пользователем */
-$languageTAG = substr(($_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? $default_lang_tag), 0, 5);
+$path_main_lang = dirname(__DIR__) . "/assets/lang";
 
-/* HINT^ - Место, где лежать все языки */
-$path_main_lang = $_SERVER["DOCUMENT_ROOT"] . "/assets/lang";
-// $path_main_lang = dirname(__FILE__);
-
-/* HINT^ - Загрузка стандартного языкового пакета в JSON */
-$content_default = file_get_contents("$path_main_lang/$default_lang.json");
-
-/* HINT^ - Загрузка языкового пакета в JSON из настроек пользователя */
+$content_default = file_get_contents("$path_main_lang/" . lang_default_code . ".json"); // Загружаем язык по умолчанию
 $content_setting = $content_default;
-$content_user_lang = trim(str_replace("/", "", substr(strval($_COOKIE["lang"] ?? $default_lang), 0, 2)));
-if (file_exists("$path_main_lang/$content_user_lang.json")) {
-    $content_setting = file_get_contents("$path_main_lang/$content_user_lang.json");
-}
 
-/* HINT^ - Преобразование языкового пакета в список */
-$string_default = json_decode($content_default, true);
-$string_setting = json_decode($content_setting, true);
+if (file_exists("$path_main_lang/$lang_setting.json")) $content_setting = file_get_contents("$path_main_lang/$lang_setting.json"); // Загружаем язык исходя из настроек
 
-/* HINT^ - Заменяем повторяющиеся ключи */
+$string_default = parse_json_decode($content_default, true);
+$string_setting = parse_json_decode($content_setting, true);
+
 $string = array_merge($string_default, $string_setting);
 
-/* HINT^ - Изменять при изменении языка пользователем */
-$language_tag = strval($string["language_tag"] ?? ($languageTAG ?? $default_lang_tag)); // Для атрибута lang=""
+$language_tag = strval(array_key_exists("language_tag", $string) ? $string["language_tag"] : lang_default_tag); // Получаем тег, чтобы использовать в атрибуте lang=""
 
-/* HINT^ - Возвращаем JSON */
-$content = json_encode($string); // Для JS списка
+$content_lang = json_encode($string);
 
 /**
  * Функция выводит необходимый текст по его ключу, если текста под этим ключом нет, будет выведен этот ключ
- * @param string $key
+ * @param string $key если строка с таким ключом существует, она будет использована; в противном случае будет использован сам ключ.
  * @param bool $html (необязательно) обрабатывает html теги
- * @param array $replace заменяет %1s, %2s, %3s и т.д. на ваш текст
+ * @param array $replace принимает несколько значений, нужно для замены %1s, %2s и т.д...
  * @return string
  */
-function str_get_string(string $key = "", bool $html = false, ...$replace):string {
+function str_lang_string(string $key, bool $html = false, ...$replace): string {
     global $string;
     $str = array_key_exists($key, $string) ? $string[$key] : $key;
-    if (sizeof($replace) > 0)
-        for($i = 0; $i < sizeof($replace); $i++) $str = str_replace("%" . ($i + 1) . "s", $replace[$i], $str);
+    $str = sprintf($str, $replace);
 
-    return $html ? $str : htmlspecialchars($str);
+    return $html ? $str : htmlspecialchars(trim($str));
+}
+
+/**
+ * Функция помогает избежать ошибок в json файле возникших из-за лишней запятой
+ */
+function parse_json_decode(string $json, ?bool $associative = null, int $depth = 512, int $flags = 0): mixed {
+    $json = preg_replace("/,\s*([]}])/", "$1", $json);
+
+    $decodedData = json_decode($json, $associative, $depth, $flags);
+
+    if ($decodedData === null && json_last_error() !== JSON_ERROR_NONE) return json_decode($json, $associative, $depth, $flags);
+
+    return $decodedData;
 }
 ```
 
@@ -80,20 +79,31 @@ include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?= str_get_string("project_name") ?></title>
+    <title><?= str_lang_string("project_name") ?></title>
     <!-- ИЛИ (рекомендуется пример выше) -->
     <title><?= $string["project_name"] ?></title>
     <!-- Результат: PHP-Language/PHP-Языковой пакет -->
 
     <script type="text/javascript">
-        const stringOBJ = <?= $content ?>;
+        const STRING_OBJ = <?= $content_lang ?>;
     </script>
 </head>
 <body>
     <h1 id="hello_world"></h1>
     
     <script>
-        document.querySelector("#hello_world").innerText = str_get_string("project_name"); // Результат: PHP-Language/PHP-Языковой пакет
+        function str_lang_string(key, ...replace) {
+            return str_replace_by(String(STRING_OBJ[key] ?? key), ...replace);
+        }
+        
+        function str_replace_by(string, ...replace) {
+            let result = string;
+            if (replace.length > 0) for(let i = 0; i < replace.length; i++) result = result.replace(new RegExp(`%${i + 1}s`, "g"), String(replace[i]));
+        
+            return result;
+        }
+
+        document.querySelector("#hello_world").innerText = str_lang_string("project_name"); // Результат: PHP-Language/PHP-Языковой пакет
     </script>
 </body>
 </html>
