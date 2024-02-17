@@ -55,7 +55,7 @@ $content = json_encode($string); // Для JS списка
  * @param array $replace заменяет %1s, %2s, %3s и т.д. на ваш текст
  * @return string
  */
-function str_get_string(string $key = "", bool $html = false, array $replace = []):string {
+function str_get_string(string $key = "", bool $html = false, ...$replace):string {
     global $string;
     $str = array_key_exists($key, $string) ? $string[$key] : $key;
     if (sizeof($replace) > 0)
