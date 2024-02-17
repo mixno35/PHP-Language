@@ -45,7 +45,7 @@ $content_lang = json_encode($string);
 function str_lang_string(string $key, bool $html = false, ...$replace): string {
     global $string;
     $str = array_key_exists($key, $string) ? $string[$key] : $key;
-    $str = sprintf($str, $replace);
+    $str = sprintf($str, ...$replace);
 
     return $html ? $str : htmlspecialchars(trim($str));
 }
