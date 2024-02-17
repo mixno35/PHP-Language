@@ -24,7 +24,7 @@ $path_main_lang = dirname(__DIR__) . "/assets/lang";
 $content_default = file_get_contents("$path_main_lang/" . lang_default_code . ".json"); // Загружаем язык по умолчанию
 $content_setting = $content_default;
 
-if (file_exists("$path_main_lang/$lang_setting.json")) $content_setting = file_get_contents("$path_main_lang/$lang_setting.json"); // Загружаем язык исходя из настроек
+file_exists("$path_main_lang/$lang_setting.json") && $content_setting = file_get_contents("$path_main_lang/$lang_setting.json"); // Загружаем язык исходя из настроек
 
 $string_default = parse_json_decode($content_default, true);
 $string_setting = parse_json_decode($content_setting, true);
