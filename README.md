@@ -70,7 +70,7 @@ function parse_json_decode(string $json, ?bool $associative = null, int $depth =
 global $language_tag, $string;
 
 /* HINT^ - Подключаем файл с настройками языка */
-include_once $_SERVER["DOCUMENT_ROOT"] . "/assets/prefs/lang.php";
+require_once dirname(__FILE__) . "/php/lang.php";
 ?>
 <!DOCTYPE html>
 <html lang="<?= $language_tag ?? "en-US" ?>">
